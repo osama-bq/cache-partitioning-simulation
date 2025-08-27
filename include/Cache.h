@@ -4,7 +4,7 @@
 #include <vector>
 #include "HardwareComponent.h"
 
-class Cache : HardwareComponent<Cache> {
+class Cache : public HardwareComponent<Cache> {
   friend class HardwareComponent<Cache>;
   int size, ways;
   std::vector<char> mem;

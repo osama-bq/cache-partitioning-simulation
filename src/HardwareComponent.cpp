@@ -3,9 +3,13 @@
 #include "RAM.h"
 #include "Cache.h"
 
+
 template class HardwareComponent<CPU>;
 template class HardwareComponent<RAM>;
 template class HardwareComponent<Cache>;
+
+template <typename T>
+std::unique_ptr<T> HardwareComponent<T>::instance = nullptr;
 
 template <typename T>
 T* HardwareComponent<T>::createInstance() {
@@ -19,6 +23,3 @@ T* HardwareComponent<T>::getInstance() {
     throw std::runtime_error("No instance created!");
   return instance.get();
 }
-
-template <typename T>
-std::unique_ptr<T> HardwareComponent<T>::instance = nullptr;

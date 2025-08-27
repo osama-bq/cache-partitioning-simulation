@@ -5,7 +5,7 @@
 #include <queue>
 #include "HardwareComponent.h"
 
-class RAM : HardwareComponent<RAM> {
+class RAM : public HardwareComponent<RAM> {
   friend class HardwareComponent<RAM>;
   int size;
   std::vector<bool> allocated;

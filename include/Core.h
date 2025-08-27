@@ -1,16 +1,24 @@
 #ifndef CORE_H
 #define CORE_H
 
+#include <thread>
+#include "RAM.h"
+#include "Instruction.h"
 #include "Process.h"
 
 class Core {
-  int id;
+  static RAM* ram;
+  int id, acc, pc, dataAddr;
+  Instruction ir;
   bool busy = false;
+
+  void runInstruction();
+  void loadIR();
 public:
   Core(int);
   int getId() const;
   bool isBusy() const;
-  void runProcess(Process&);
+  std::thread runProcess(Process&);
 };
 
 #endif
