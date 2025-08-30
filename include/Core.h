@@ -3,17 +3,23 @@
 
 #include <thread>
 #include "RAM.h"
+#include "Cache.h"
 #include "Instruction.h"
 #include "Process.h"
 
 class Core {
   static RAM* ram;
-  int id, acc, pc, dataAddr;
+  static Cache* cache;
+  int id, pc, dataAddr;
+  char acc;
   Instruction ir;
   bool busy = false;
 
   void runInstruction();
   void loadIR();
+  void load(int);
+  void store(int);
+  void set(char);
 public:
   Core(int);
   int getId() const;

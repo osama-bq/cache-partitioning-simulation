@@ -13,6 +13,7 @@ class CPU : public HardwareComponent<CPU> {
   CPU(int n = 2);
 public:
   static CPU* createInstance(int);
+  int getNumCores() const;
   std::vector<Core>& getCores();
 };
 

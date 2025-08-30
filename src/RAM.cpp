@@ -1,8 +1,9 @@
 #include "RAM.h"
+#include "Constants.h"
 #include <cassert>
 
-RAM::RAM(int s) : size(s), mem(s), allocated(s) {
-  gaps.push({s, 0});
+RAM::RAM(int numBlocks) : size(numBlocks * BLOCK_SIZE), mem(size), allocated(size) {
+  gaps.push({size, 0});
 }
 
 int RAM::getSize() const { return size; }

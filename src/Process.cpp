@@ -14,7 +14,7 @@ Process::Process(int n) : dataSpace(n), id(nextId++) {}
 int Process::getId() const { return id; }
 
 int Process::size() const {
-  return instructions.size() * (1 + (SYSTEM_BITS / 8)) + dataSpace;
+  return 2 * instructions.size() + dataSpace;
 }
 
 int Process::getAddr() const { return addr; }
@@ -22,12 +22,20 @@ int Process::getAddr() const { return addr; }
 int Process::instructionsCount() const { return instructions.size(); }
 
 Process Process::createRandom(int numInstructions, int dataSpace) {
-  std::uniform_int_distribution<int> rndOp(0, 2), rndAddr(0, dataSpace - 1);
+  std::uniform_int_distribution<int> rndOp(0, 3);
   Process p(dataSpace);
   for (int i = 0; i < numInstructions; i++) {
-    Operator op = static_cast<Operator>(rndOp(rng) % 3);
-    int operand = (op == Operator::EXECUTE) ? -1 : (rndAddr(rng) % dataSpace);
-    p.instructions.emplace_back(op, operand);
+    Operator op = static_cast<Operator>(rndOp(rng));
+    int l = -1, r = -1;
+    if (op == Operator::SET) {
+      l = INT32_MIN;
+      r = INT32_MAX;
+    } else {
+      l = 0;
+      r = dataSpace - 1;
+    }
+    std::uniform_int_distribution<int> rndOprnd(l, r);
+    p.instructions.emplace_back(op, rndOprnd(rng));
   }
   return p;
 }

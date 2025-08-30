@@ -20,6 +20,6 @@ T* HardwareComponent<T>::createInstance() {
 template <typename T>
 T* HardwareComponent<T>::getInstance() {
   if (!instance)
-    throw std::runtime_error("No instance created!");
+    throw std::runtime_error("No instance created!" + std::string(typeid(T).name()));
   return instance.get();
 }

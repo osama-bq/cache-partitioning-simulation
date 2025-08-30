@@ -11,4 +11,6 @@ CPU* CPU::createInstance(int n) {
   return instance.get();
 }
 
+int CPU::getNumCores() const { return cores.size(); }
+
 std::vector<Core>& CPU::getCores() { return cores; }

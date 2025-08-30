@@ -7,8 +7,8 @@
 using namespace std;
 
 int main() {
-  auto os = OS::createInstance(2, 128, 8, 2);
-  auto p1 = Process::createRandom(10, 4);
+  auto os = OS::createInstance(2, 1024, 32, 2);
+  auto p1 = Process::createRandom(10, 10);
   try {
     os->loadProcess(p1);
     cout << "Process " << p1.getId() << " loaded successfully at " << hex << p1.getAddr() << dec << endl;

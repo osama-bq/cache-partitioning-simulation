@@ -1,2 +1,4 @@
-void storeBytes(char*, int, int);
-int loadBytes(char*, int);
+#pragma once
+#include <vector>
+void storeBytes(std::vector<int>::iterator, int, int);
+int loadBytes(std::vector<int>::const_iterator, int);

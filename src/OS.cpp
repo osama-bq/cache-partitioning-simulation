@@ -5,8 +5,9 @@
 OS::OS(int cpu_cores, int ram_size, int cache_size, int cache_ways) {
   ram = RAM::createInstance(ram_size);
   cache = Cache::createInstance(cache_size, cache_ways);
-  // ensure CPU is created last to avoid dependency issues
+  // ensure Cache is created last to avoid dependency issues: See Core constructor
   cpu = CPU::createInstance(cpu_cores);
+  cache->init();
 }
 
 OS* OS::createInstance(int cpu_cores, int ram_size, int cache_size, int cache_ways) {
@@ -36,8 +37,8 @@ void OS::loadProcess(Process& p) {
   if (p.addr == -1)
     throw std::runtime_error("Not enough RAM to load process " + std::to_string(p.getId()));
   for (int i = 0; i < p.instructions.size(); i++) {
-    ram->mem[p.addr + i * (1 + (SYSTEM_BITS / 8))] = static_cast<char>(p.instructions[i].op);
-    storeBytes(&ram->mem[p.addr + i * (1 + (SYSTEM_BITS / 8)) + 1], p.instructions[i].operand, SYSTEM_BITS / 8);
+    ram->mem[p.addr + i * 2] = static_cast<int>(p.instructions[i].op);
+    ram->mem[p.addr + i * 2 + 1] = p.instructions[i].operand;
   }
 }
 
