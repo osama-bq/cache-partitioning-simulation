@@ -1,7 +1,8 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic
-LDFLAGS = -lncurses  # Only needed if using ncurses library
+CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic -g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer
+LDFLAGS = -lncurses -pthread -fsanitize=address,undefined -fno-omit-frame-pointer
+
 
 # Project directories
 SRC_DIR = src

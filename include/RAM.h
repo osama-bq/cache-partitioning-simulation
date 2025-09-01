@@ -11,6 +11,8 @@ class RAM : public HardwareComponent<RAM> {
   friend class Core;
   friend class Cache;
   int size;
+  int ramReads = 0;
+  int ramWrites = 0;
   std::vector<bool> allocated;
   std::priority_queue<std::pair<int, int>> gaps; // (size, addr)
   RAM(int = 8);
@@ -21,6 +23,8 @@ public:
   int getSize() const;
   int allocate(int);
   void deallocate(int, int = 1);
+  int getRamReads() const;
+  int getRamWrites() const;
 };
 
 #endif

@@ -8,6 +8,9 @@ RAM::RAM(int numBlocks) : size(numBlocks * BLOCK_SIZE), mem(size), allocated(siz
 
 int RAM::getSize() const { return size; }
 
+int RAM::getRamReads() const { return ramReads; }
+int RAM::getRamWrites() const { return ramWrites; }
+
 RAM* RAM::createInstance(int s) {
   instance = std::unique_ptr<RAM>(new RAM(s));
   return instance.get();

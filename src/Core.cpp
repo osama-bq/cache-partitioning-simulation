@@ -5,6 +5,7 @@
 #include "Core.h"
 #include "Process.h"
 #include "RAM.h"
+#include "OS.h"
 
 #include <iostream>
 
@@ -20,22 +21,23 @@ int Core::getId() const { return id; }
 bool Core::isBusy() const { return busy; }
 
 void Core::load(int addr) {
-  if (addr < 0 || addr > ram->getSize())
+  if (addr < 0 || addr >= ram->getSize())
     throw std::runtime_error("Invalid memory access at " + std::to_string(addr));
-  if (cache->check(addr)) {
+  try {
     acc = cache->get(addr);
-  } else {
+  } catch (const std::runtime_error& e) {
+    // fallback: load block into cache and retry
     cache->copyBlock(addr / BLOCK_SIZE, id);
     acc = cache->get(addr);
   }
 }
 
 void Core::store(int addr) {
-  if (addr < 0 || addr > ram->getSize())
+  if (addr < 0 || addr >= ram->getSize())
     throw std::runtime_error("Invalid memory access at " + std::to_string(addr));
-  if (cache->check(addr)) {
+  try {
     cache->set(addr, acc);
-  } else {
+  } catch (const std::runtime_error& e) {
     cache->copyBlock(addr / BLOCK_SIZE, id);
     cache->set(addr, acc);
   }
@@ -74,13 +76,16 @@ std::thread Core::runProcess(Process& p) {
   if (p.getAddr() == -1) throw std::runtime_error("Process " + std::to_string(p.getId()) + " is not loaded in RAM.");
 
   dataAddr = p.getAddr() + p.instructionsCount() * 2;
-  return std::thread([this, &p](){
+
+  // Capture a copy of the process to avoid reference lifetime issues.
+  Process procCopy = p;
+
+  return std::thread([this, procCopy]() mutable {
     busy = true;
-    auto addr = p.getAddr();
-    auto instrCount = p.instructionsCount();
+    auto addr = procCopy.getAddr();
+    auto instrCount = procCopy.instructionsCount();
     pc = addr;
     acc = 0;
-    // std::cout << "Core " << id << " executing process " << p.getId() << std::endl;
     for (int i = 0; i < instrCount; i++) {
       loadIR();
       runInstruction();
