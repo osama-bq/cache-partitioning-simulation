@@ -72,6 +72,8 @@ void Core::loadIR() {
 std::thread Core::runProcess(Process& p) {
   if (busy) throw std::runtime_error("Core " + std::to_string(id) + " is already busy.");
   if (p.getAddr() == -1) throw std::runtime_error("Process " + std::to_string(p.getId()) + " is not loaded in RAM.");
+
+  dataAddr = p.getAddr() + p.instructionsCount() * 2;
   return std::thread([this, &p](){
     busy = true;
     auto addr = p.getAddr();

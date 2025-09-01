@@ -10,7 +10,7 @@
 class Core {
   static RAM* ram;
   static Cache* cache;
-  int id, pc, dataAddr;
+  int id, pc, dataAddr = -1;
   char acc;
   Instruction ir;
   bool busy = false;

@@ -36,6 +36,7 @@ void OS::loadProcess(Process& p) {
   p.addr = ram->allocate(p.size());
   if (p.addr == -1)
     throw std::runtime_error("Not enough RAM to load process " + std::to_string(p.getId()));
+
   for (int i = 0; i < p.instructions.size(); i++) {
     ram->mem[p.addr + i * 2] = static_cast<int>(p.instructions[i].op);
     ram->mem[p.addr + i * 2 + 1] = p.instructions[i].operand;

@@ -7,22 +7,21 @@
 using namespace std;
 
 int main() {
-  auto os = OS::createInstance(2, 1024, 32, 2);
-  auto p1 = Process::createRandom(10, 10);
-  try {
-    os->loadProcess(p1);
-    cout << "Process " << p1.getId() << " loaded successfully at " << hex << p1.getAddr() << dec << endl;
-    auto& cores = os->getCPU()->getCores();
-    vector<thread> threads;
-    for (auto& core: cores) {
-      if (!core.isBusy()) {
-        threads.push_back(core.runProcess(p1));
-        break;
-      }
-    }
-    for (auto& t: threads) t.join();
-  } catch (const runtime_error& e) {
-    cerr << "Error: " << e.what() << endl;
+  auto os = OS::createInstance(4, 16384, 128, 8);
+  vector<Process> processes;
+  vector<thread> t;
+  for (int i = 0; i < 4; i++) {
+    processes.push_back(Process::createRandom(350, 100));
+    os->loadProcess(processes.back());
+    cout << "Loaded process " << processes.back().getId() << " at address "
+         << processes.back().getAddr() << " (size: " << processes.back().size() << ")\n";
   }
+
+  auto cpu = os->getCPU();
+  auto& cores = cpu->getCores();
+  for (int i = 0; i < processes.size(); i++)
+    t.push_back(cores[i].runProcess(processes[i]));
+
+  for (auto& th : t) th.join();
   return 0;
 }
