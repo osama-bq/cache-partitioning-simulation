@@ -8,29 +8,33 @@ RAM::RAM(int numBlocks) : size(numBlocks * BLOCK_SIZE), mem(size), allocated(siz
 
 int RAM::getSize() const { return size; }
 
-int RAM::getRamReads() const { return ramReads; }
-int RAM::getRamWrites() const { return ramWrites; }
-
 RAM* RAM::createInstance(int s) {
   instance = std::unique_ptr<RAM>(new RAM(s));
   return instance.get();
 }
 
-int RAM::allocate(int size) {
-  assert(size > 0 && "Size must be positive");
-  auto [gap_size, addr] = gaps.top();
+int RAM::allocate(int requestSize) {
+    assert(requestSize > 0 && "Size must be positive");
 
-  if (gap_size < size)
-    return -1; // avoiding rearrangement for simplicity
-  gaps.pop();
+    // Round up to full blocks
+    int blocksNeeded = (requestSize + BLOCK_SIZE - 1) / BLOCK_SIZE;
+    int allocSize = blocksNeeded * BLOCK_SIZE;
 
-  for (int i = addr; i < addr + size; i++)
-    allocated[i] = true;
+    auto [gap_size, addr] = gaps.top();
 
-  if (gap_size > size)
-    gaps.push({gap_size - size, addr + size});
+    if (gap_size < allocSize)
+        return -1; // Not enough space in this gap, could try other gaps if implemented
+    gaps.pop();
 
-  return addr;
+    // Mark all bytes in the allocated blocks as used
+    for (int i = addr; i < addr + allocSize; i++)
+        allocated[i] = true;
+
+    // If leftover space in the gap, push it back
+    if (gap_size > allocSize)
+        gaps.push({gap_size - allocSize, addr + allocSize});
+
+    return addr;
 }
 
 void RAM::deallocate(int addr, int size) {

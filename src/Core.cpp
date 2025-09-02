@@ -21,27 +21,19 @@ int Core::getId() const { return id; }
 bool Core::isBusy() const { return busy; }
 
 void Core::load(int addr) {
-  if (addr < 0 || addr >= ram->getSize())
-    throw std::runtime_error("Invalid memory access at " + std::to_string(addr));
-  try {
-    acc = cache->get(addr);
-  } catch (const std::runtime_error& e) {
-    // fallback: load block into cache and retry
-    cache->copyBlock(addr / BLOCK_SIZE, id);
-    acc = cache->get(addr);
-  }
+    if (addr < 0 || addr >= ram->getSize())
+        throw std::runtime_error("Invalid memory access at " + std::to_string(addr));
+
+    acc = cache->get(addr, id);   // cache decides hit/miss
 }
 
 void Core::store(int addr) {
-  if (addr < 0 || addr >= ram->getSize())
-    throw std::runtime_error("Invalid memory access at " + std::to_string(addr));
-  try {
-    cache->set(addr, acc);
-  } catch (const std::runtime_error& e) {
-    cache->copyBlock(addr / BLOCK_SIZE, id);
-    cache->set(addr, acc);
-  }
+    if (addr < 0 || addr >= ram->getSize())
+        throw std::runtime_error("Invalid memory access at " + std::to_string(addr));
+
+    cache->set(addr, acc, id);    // cache decides hit/miss
 }
+
 
 void Core::set(char val) { acc = val; }
 
