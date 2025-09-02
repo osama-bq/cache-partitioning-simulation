@@ -18,6 +18,7 @@ It models CPU cores, RAM, and cache, and compares performance metrics such as **
 
 ## 📂 Project Structure
 
+```
 ├── bin
 │   └── main
 ├── include
@@ -41,6 +42,7 @@ It models CPU cores, RAM, and cache, and compares performance metrics such as **
     ├── OS.cpp
     ├── Process.cpp
     └── RAM.cpp
+```
 
 ---
 
