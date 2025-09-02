@@ -1,6 +1,3 @@
-Here’s a quick and simple **GitHub README** you can drop in your project:
-
-```markdown
 # 🖥️ Cache Simulation Project
 
 This project simulates cache memory operations with and without **cache partitioning**.  
@@ -20,7 +17,6 @@ It models CPU cores, RAM, and cache, and compares performance metrics such as **
 ---
 
 ## 📂 Project Structure
-```
 
 ├── bin
 │   └── main
@@ -46,8 +42,6 @@ It models CPU cores, RAM, and cache, and compares performance metrics such as **
     ├── Process.cpp
     └── RAM.cpp
 
-````
-
 ---
 
 ## ⚡ How to Build & Run
@@ -61,8 +55,7 @@ make
 
 # Run
 ./bin/main
-````
-
+```
 ---
 
 ## 📊 Sample Output
@@ -88,7 +81,5 @@ Energy (arbitrary)      3100.00             2470.00
 
 This project is for **academic purposes**.
 You’re free to use or adapt it with proper credit.
-
-```
 
 ---
